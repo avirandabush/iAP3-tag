@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct AP3TagApp: App {
+    @StateObject var viewModel = AppViewModel()
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView(viewModel: viewModel)
         }
     }
 }
