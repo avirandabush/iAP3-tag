@@ -33,8 +33,7 @@ struct HomeView: View {
             }
             
             ToolbarItem(placement: .automatic) {
-                RightToolbar()
-                    .padding()
+                RightToolbar(viewModel: viewModel)
             }
         }
     }

@@ -35,4 +35,24 @@ class AppViewModel: ObservableObject {
         self.selectedFiles.append(contentsOf: newFiles.map { AudioFile(url: $0) })
         print(selectedFiles)
     }
+    
+    func deleteFields() {
+        print("deleteFields")
+    }
+    
+    func cancelChanges() {
+        print("cancelChanges")
+    }
+    
+    func undo() {
+        print("undo")
+    }
+    
+    func redo() {
+        print("redo")
+    }
+    
+    func saveChanges() {
+        print("saveChanges")
+    }
 }
