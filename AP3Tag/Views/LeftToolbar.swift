@@ -15,7 +15,7 @@ struct LeftToolbar: View {
             Button {
                 viewModel.openFolderPicker()
             } label: {
-                Image(systemName: "folder.badge.plus")
+                Image(systemName: "folder.fill.badge.plus")
                     .foregroundStyle(.blue)
             }
             .padding(0)
@@ -26,7 +26,7 @@ struct LeftToolbar: View {
             Button {
                 viewModel.openFilePicker()
             } label: {
-                Image(systemName: "document.badge.plus")
+                Image(systemName: "document.badge.plus.fill")
                     .foregroundStyle(.blue)
             }
             .padding(0)
@@ -37,7 +37,7 @@ struct LeftToolbar: View {
             Button {
                 viewModel.clearFiles()
             } label: {
-                Image(systemName: "clear")
+                Image(systemName: "delete.forward.fill")
                     .foregroundStyle(.blue)
             }
             .padding(0)
