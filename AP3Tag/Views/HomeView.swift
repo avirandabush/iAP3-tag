@@ -9,16 +9,36 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var viewModel: AppViewModel
-
+    
     var body: some View {
-        HSplitView {
-            FilesView(viewModel: viewModel)
-                .frame(minWidth: 400, idealWidth: 600, maxWidth: .infinity)
+        ZStack {
+            HSplitView {
+                FilesView(viewModel: viewModel)
+                    .frame(minWidth: 400, idealWidth: 600, maxWidth: .infinity)
+                
+                MetadataFormView(appVM: viewModel)
+                    .frame(width: 400)
+            }
+            .frame(minWidth: 1000, minHeight: 500)
             
-            MetadataFormView(viewModel: viewModel)
-                .frame(width: 500)
+            if viewModel.showToast {
+                VStack {
+                    Spacer()
+                    
+                    if viewModel.showToast {
+                        Text(viewModel.toastMessage)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(.black.opacity(0.85))
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                            .padding(.bottom, 30)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
+                }
+                .animation(.easeInOut(duration: 0.25), value: viewModel.showToast)
+            }
         }
-        .frame(minWidth: 600, minHeight: 400)
         
         .navigationTitle("")
         
