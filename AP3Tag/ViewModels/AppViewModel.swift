@@ -8,20 +8,38 @@
 import Foundation
 import Combine
 import UniformTypeIdentifiers
+import ID3TagEditor
 
 class AppViewModel: ObservableObject {
-    @Published var selectedFiles: [AudioFile] = []
-    @Published var selectedFileURL: AudioFile?
+    @Published var filesList: [AudioFile] = []
+    @Published var selectedFile: AudioFile?
+    @Published var selectedFileMetadata: FileMetadata?
+    @Published var editableFile: FileMetadata = FileMetadata()
+    @Published var toastMessage: String = ""
+    @Published var showToast: Bool = false
     
-    let pickerService = FilePickerService()
+    private let pickerService = FilePickerService()
+    private let metadataService = MetadataService()
+    
+    func showToast(message: String) {
+        toastMessage = message
+        showToast = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+            self?.showToast = false
+            self?.toastMessage = ""
+        }
+    }
+    
+    // MARK: - Left toolbar methods
     
     func clearFiles() {
-        selectedFiles.removeAll()
+        filesList.removeAll()
+        selectedFile = nil
     }
     
     func openFilePicker() {
-        selectedFiles.append(contentsOf: pickerService.openFilePicker().map { AudioFile(url: $0) })
-        print(selectedFiles)
+        filesList.append(contentsOf: pickerService.openFilePicker().map { AudioFile(url: $0) })
     }
     
     func openFolderPicker() {
@@ -32,9 +50,10 @@ class AppViewModel: ObservableObject {
             newFiles.append(contentsOf: pickerService.getFilesFromDirectory(url: folderURL))
         }
         
-        self.selectedFiles.append(contentsOf: newFiles.map { AudioFile(url: $0) })
-        print(selectedFiles)
+        self.filesList.append(contentsOf: newFiles.map { AudioFile(url: $0) })
     }
+    
+    // MARK: - Right toolbar methods
     
     func deleteFields() {
         print("deleteFields")
@@ -53,6 +72,29 @@ class AppViewModel: ObservableObject {
     }
     
     func saveChanges() {
-        print("saveChanges")
+        let result = metadataService.writeMetadata(editableFile, at: selectedFile?.url)
+        showToast(message: result.message)
+    }
+    
+    // MARK: - List methods
+    
+    func changeName() {
+        print("changeName")
+    }
+    
+    // MARK: - Metadata mothods
+    
+    func readMetadata(from url: URL) {
+        DispatchQueue.main.async {
+            let result = self.metadataService.readMetadata(from: self.selectedFile?.url)
+            self.selectedFileMetadata = result?.value
+            self.editableFile = result?.value ?? FileMetadata()
+        }
+    }
+
+    func clearSelectedFile() {
+        DispatchQueue.main.async {
+            self.selectedFileMetadata = nil
+        }
     }
 }
